@@ -39,7 +39,11 @@ struct AppStateManager {
 
         if DateManager().pastRequiredInstallationDate() && OptionalFeatureVariables.aggressiveUserFullScreenExperience {
             UIUtilities().centerNudge()
-            NSApp.activate(ignoringOtherApps: true)
+            if #available(macOS 14.0, *) {
+                NSApp.activate()
+            } else {
+                NSApp.activate(ignoringOtherApps: true)
+            }
             mainWindow.makeKeyAndOrderFront(nil)
             applyBackgroundBlur(to: mainWindow)
             return
@@ -48,7 +52,11 @@ struct AppStateManager {
         if NSWorkspace.shared.isActiveSpaceFullScreen() && !nudgePrimaryState.afterFirstStateChange {
             LogManager.notice("Bypassing activation due to full screen bugs in macOS", logger: uiLog)
         } else {
-            NSApp.activate(ignoringOtherApps: true)
+            if #available(macOS 14.0, *) {
+                NSApp.activate()
+            } else {
+                NSApp.activate(ignoringOtherApps: true)
+            }
             mainWindow.makeKeyAndOrderFront(nil)
         }
     }
@@ -1170,6 +1178,8 @@ struct NetworkFileManager {
                 return "/Applications/Install macOS Sonoma.app"
             case 15:
                 return "/Applications/Install macOS Sequoia.app"
+            case 26:
+                return "/Applications/Install macOS Tahoe.app"
             default:
                 return "/System/Library/CoreServices/Software Update.app"
         }

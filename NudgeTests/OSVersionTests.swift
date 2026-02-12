@@ -32,4 +32,32 @@ class OSVersionTest: XCTestCase {
 
         XCTAssertEqual(expected, actual)
     }
+
+    func testMacOS26TahoeVersionJump() {
+        let sequoia = OSVersion(major: 15, minor: 5, patch: 0)
+        let tahoe = OSVersion(major: 26, minor: 0, patch: 0)
+        let tahoePatch = OSVersion(major: 26, minor: 3, patch: 0)
+
+        XCTAssertGreaterThan(tahoe, sequoia, "Tahoe (26) should be greater than Sequoia (15)")
+        XCTAssertGreaterThan(tahoePatch, tahoe, "Tahoe 26.3 should be greater than Tahoe 26.0")
+        XCTAssertFalse(sequoia > tahoe, "Sequoia should not be greater than Tahoe")
+    }
+
+    func testParseMacOS26TahoeVersion() {
+        guard let tahoe = try? OSVersion("26.0") else {
+            XCTFail("expected OSVersion to not fail parsing '26.0'")
+            return
+        }
+        XCTAssertEqual(tahoe.major, 26)
+        XCTAssertEqual(tahoe.minor, 0)
+        XCTAssertEqual(tahoe.patch, 0)
+
+        guard let tahoePatch = try? OSVersion("26.3.1") else {
+            XCTFail("expected OSVersion to not fail parsing '26.3.1'")
+            return
+        }
+        XCTAssertEqual(tahoePatch.major, 26)
+        XCTAssertEqual(tahoePatch.minor, 3)
+        XCTAssertEqual(tahoePatch.patch, 1)
+    }
 }

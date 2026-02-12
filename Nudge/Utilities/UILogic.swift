@@ -287,11 +287,11 @@ func isAnyProcessRunning(commandsWithArgs: [(commandPattern: String, arguments: 
 func isDownloadingOrPreparingSoftwareUpdate() -> Bool {
     let commandsWithArgs: [(commandPattern: String, arguments: [String]?, username: String?)] = [
         ("*com.apple.StreamingUnzipService", nil, "_nsurlsessiond"), // When downloading a minor update on macOS 12, this process is running to extract the OS update for preparation.
-        ("*com.apple.StreamingUnzipService.privileged", nil, "_nsurlsessiond"), // When downloading a minor update on macOS 15, this process is running to extract the OS update for preparation.
+        ("*com.apple.StreamingUnzipService.privileged", nil, "_nsurlsessiond"), // When downloading a minor update on macOS 15+, this process is running to extract the OS update for preparation.
         ("*softwareupdated", ["/System/Library/PrivateFrameworks/MobileSoftwareUpdate.framework/Support/softwareupdated"], nil), // When downloading a minor update, this process is running.
         ("*softwareupdate", ["/usr/bin/softwareupdate", "--fetch-full-installer"], nil), // When downloading a major upgrade via SoftwareUpdate prefpane, it triggers a --fetch-full-installer run. Nudge also performs this method.
         ("*softwareupdate", ["/usr/sbin/softwareupdate", "--fetch-full-installer"], nil), // When downloading a major upgrade via softwareupdate cli, it triggers a --fetch-full-installer run. Nudge also performs this method.
-        ("*com.apple.MobileSoftwareUpdate.UpdateBrainService", [], nil), // When preparing a minor update on macOS 12-15, this process is running when preparing an update. This is the same process for Intel and Apple Silicon devices.
+        ("*com.apple.MobileSoftwareUpdate.UpdateBrainService", [], nil), // When preparing a minor update on macOS 12+, this process is running when preparing an update. This is the same process for Intel and Apple Silicon devices.
     ]
     return isAnyProcessRunning(commandsWithArgs: commandsWithArgs) && !isSnapshotPresent(snapshotName: "com.apple.os.update-MSUPrepareUpdate")
 }
